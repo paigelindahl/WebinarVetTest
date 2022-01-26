@@ -8,7 +8,7 @@
         <title>Front End Developer Test</title>
         <link rel="preconnect" href="https://fonts.googleapis.com">
         <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-        <link href="https://fonts.googleapis.com/css2?family=Lexend:wght@100;200;300;400;500;600;700;800;900&display=swap" rel="stylesheet" data-noprefix>
+        <link href="https://fonts.googleapis.com/css2?family=Lexend:wght@100;200;300;400;500;600;700;800;900&display=swap" rel="stylesheet" >
         <script src="https://cdn.tailwindcss.com"></script>
         <script>
             tailwind.config = {
@@ -53,19 +53,19 @@
                 <!-- Code Starts Here -->
 
 
-              <div v-for="person in practiceMembers">
-                <div class="border border-gray-200 bg-white  py-8 px-4 sm:py-4 sm:px-8">
+              <div v-for="(person, index) in practiceMembers" :key="index" >
+                <div class="border border-gray-200 bg-white  py-10 px-4 sm:py-5 sm:px-10">
                   <div class="grid grid-cols-1 sm:grid-cols-3">
                     <div class="flex items-center">
                       <img class="max-w-[60px] sm:max-w-[80px] rounded-full" :src="person.staff.image" alt="person.staff.name"/>
-                      <p class="ml-4 inline-block align-middle text-sm sm:text-base"><span class="font-medium">{{ person.staff.name }}</span><br><span class="font-light">{{ person.staff.position }}</span></p>
+                      <p class="ml-4 inline-block align-middle text-sm md:text-base"><span class="font-medium">{{ person.staff.name }}</span><br><span class="font-light">{{ person.staff.position }}</span></p>
                     </div>
                     <div class="flex items-center  sm:justify-center">
-                      <p class="font-medium ml-[76px] sm:ml-2 text-sm sm:text-base">CPD hours done: {{ person.cpdDone }}/35</p>
+                      <p class="font-medium ml-[76px] sm:ml-2 text-sm md:text-base">CPD hours done: {{ person.cpdDone }}/35</p>
                     </div>
                     <div class="flex items-center justify-start sm:justify-end pt-5 sm:pt-0">
-                      <span class="text-blue-600 pr-7 text-sm sm:text-base">Edit</span>
-                      <span class="text-red-600 text-sm sm:text-base hover:bg-red-100 px-2 py-1 rounded-lg" v-on:click="openModal">Remove</span>
+                      <span class="text-blue-600 mr-7 text-sm md:text-base hover:bg-blue-100 px-6 py-1 rounded-lg">Edit</span>
+                      <span class="text-red-600 text-sm md:text-base hover:bg-red-100 px-2 py-1 rounded-lg" v-on:click="openDeleteModal">Remove</span>
                     </div>
                   </div>
                 </div>
@@ -102,7 +102,7 @@
                 },
                 // Add any required methods below
                 methods: {
-                  openModal: function() {
+                  openDeleteModal: function(event) {
                     Swal.fire({
                     title: 'Are you sure?',
                     text: "You won't be able to revert this!",
@@ -110,17 +110,20 @@
                     showCancelButton: true,
                     confirmButtonColor: '#3085d6',
                     cancelButtonColor: '#d33',
-                    confirmButtonText: 'Yes, delete it!'
+                    confirmButtonText: 'Yes, delete it!',
+                  
                   }).then((result) => {
+                    console.log(result)
                     if (result.isConfirmed) {
                       Swal.fire(
+                        
                         'Deleted!',
                         'Your file has been deleted.',
                         'success'
                       )
                     }
                   })
-                  }
+                  },
                
                     
                 }
