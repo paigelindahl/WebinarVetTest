@@ -58,17 +58,19 @@
                 <div class="border border-gray-200 bg-white  py-10 px-4 sm:py-5 sm:px-10 shadow-md">
                   <div class="grid grid-cols-1 sm:grid-cols-3">
                     <div class="flex items-center">
-                      <img class="max-w-[60px] sm:max-w-[80px] rounded-full" :src="person.staff.image" alt="person.staff.name"/>
-                      <p class="ml-4 inline-block align-middle text-sm md:text-base"><span class="font-medium">{{ person.staff.name }}</span><br><span class="font-light">{{ person.staff.position }}</span></p>
+                      <profile-image :image="person.staff.image" :name="person.staff.name"></profile-image>
+                      <name-position :name="person.staff.name" :position="person.staff.position"></name-position>
                     </div>
                     <div class="flex items-center  sm:justify-center">
                       <p v-if="person.staff.position.includes('Nurse')" class="font-medium ml-[76px] sm:ml-2 text-sm md:text-base">CPD hours done: {{ person.cpdDone }}/15</p> 
                       <p v-else class="font-medium ml-[76px] sm:ml-2 text-sm md:text-base">CPD hours done: {{ person.cpdDone }}/35</p>
                     </div>
                     <div class="flex items-center justify-start sm:justify-end pt-5 sm:pt-0">
-                      <a href="#" v-on:click="openEditModal" class="text-blue-500 mr-7 text-sm md:text-base font-medium hover:bg-blue-50 rounded-lg p-1">Edit</a>
-                      <a href="#" v-on:click="openDeleteModal" class="text-red-500 text-sm md:text-base hover:bg-red-50 px-2 py-1 rounded-lg font-medium">Remove</a>
-                    </div>
+                      <!-- <a href="#" v-on:click="openEditModal" class="text-blue-500 mr-7 text-sm md:text-base font-medium hover:bg-blue-50 rounded-lg p-1">Edit</a> -->
+                      <edit-btn @click="openEditModal"></edit-btn>
+                      <!-- <a href="#" v-on:click="openDeleteModal" class="text-red-500 text-sm md:text-base hover:bg-red-50 px-2 py-1 rounded-lg font-medium">Remove</a> -->
+                     <delete-btn @click="openDeleteModal"></delete-btn>
+                    </div> 
                   </div>
                 </div>
               </div>
@@ -130,7 +132,6 @@
                   openEditModal: function() {
                     Swal.fire({
                     title: 'Want to Edit?',
-                    // text: "You won't be able to revert this!",
                     icon: 'warning',
                     input:'text',
                     inputPlaceholder: 'Employees Name',
@@ -189,6 +190,41 @@
                     editUrl: '#'
                 },
             ]
+
+            app.component('name-position', {
+              props:['name', 'position'],
+              template: `
+                    <p class="ml-4 inline-block align-middle text-sm md:text-base"><span class="font-medium">{{name}}</span><br><span class="font-light">{{position}}</span></p>
+                `
+
+            })
+
+            app.component('profile-image', {
+              props: ['image', 'name'],
+              template: `
+                    <img class="max-w-[60px] sm:max-w-[80px] rounded-full" :src="image" alt="name"/>
+                `
+            })
+
+            app.component('edit-btn', {
+             
+              template: `
+                    <a href="#" class="text-blue-500 mr-7 text-sm md:text-base font-medium hover:bg-blue-50 rounded-lg p-1">Edit</a>
+                `
+            })
+
+            app.component('delete-btn', {
+             
+              template: `
+                    <a href="#" class="text-red-500 text-sm md:text-base hover:bg-red-50 px-2 py-1 rounded-lg font-medium">Remove</a>
+                `
+            })
+
+
+
+
+
+     
 
             // Footer Link
             app.component('footer-link', {
