@@ -8,7 +8,7 @@
         <title>Front End Developer Test</title>
         <link rel="preconnect" href="https://fonts.googleapis.com">
         <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-        <link href="https://fonts.googleapis.com/css2?family=Lexend:wght@100;200;300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+        <link href="https://fonts.googleapis.com/css2?family=Lexend:wght@100;200;300;400;500;600;700;800;900&display=swap" rel="stylesheet" >
         <script src="https://cdn.tailwindcss.com"></script>
         <script>
             tailwind.config = {
@@ -18,8 +18,16 @@
                             sans: ['Lexend', 'sans-serif'],
                         },
                         spacing: {
+                            '20': '1.25rem',
                             '15': '3.75rem',
-                        }
+                            '76': '76px',
+                            '346': '21.625rem',
+                        }, 
+                        maxWidth: {
+                          '80': '80px',
+                          '60': '60px',
+                          '1200': '1200px',
+                        },
                     },
                 }
             }
@@ -44,6 +52,30 @@
             </section>
             <main class="container mx-auto py-10 md:py-20 flex-shrink-0 flex-grow px-4">
                 <!-- Code Starts Here -->
+
+            <div class="max-w-[1200px] my-5 sm:mt-15 sm:mb-[21.625rem]">
+              <div v-for="(person, index) in practiceMembers" :key="index" >
+                <div class="border border-gray-200 bg-white  py-10 px-4 sm:py-5 sm:px-10 shadow-md">
+                  <div class="grid grid-cols-1 sm:grid-cols-3">
+                    <div class="flex items-center">
+                      <profile-image :image="person.staff.image" :name="person.staff.name"></profile-image>
+                      <name-position :name="person.staff.name" :position="person.staff.position"></name-position>
+                    </div>
+                    <div class="flex items-center  sm:justify-center">
+                      <p v-if="person.staff.position.includes('Nurse')" class="font-medium ml-[76px] sm:ml-2 text-sm md:text-base">CPD hours done: {{ person.cpdDone }}/15</p> 
+                      <p v-else class="font-medium ml-[76px] sm:ml-2 text-sm md:text-base">CPD hours done: {{ person.cpdDone }}/35</p>
+                    </div>
+                    <div class="flex items-center justify-start sm:justify-end pt-5 sm:pt-0">
+                      <edit-btn @click="openEditModal"></edit-btn>
+                      <delete-btn @click="openDeleteModal"></delete-btn>
+                    </div> 
+                  </div>
+                </div>
+              </div>
+            </div>
+
+
+            
             
                 <!-- Code Ends Here -->
             </main>
@@ -54,7 +86,8 @@
                 </div>
             </footer>
         </div>
-        <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+        <!-- <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script> -->
+        <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
         <script src="https://unpkg.com/vue@next"></script>
         <script>
             const app = Vue.createApp({
@@ -67,12 +100,60 @@
                     return {
                         practiceName: 'Forest Green Group',
                         currentYear: new Date().getFullYear(),
+                        
                     }
                 },
                 // Add any required methods below
                 methods: {
+                  openDeleteModal: function(event) {
+                    Swal.fire({
+                    title: 'Are you sure?',
+                    text: "You won't be able to revert this!",
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: '#3085d6',
+                    cancelButtonColor: '#d33',
+                    confirmButtonText: 'Yes, delete it!',
+                  
+                  }).then((result) => {
+                    console.log(result)
+                    if (result.isConfirmed) {
+                      Swal.fire(
+                        
+                        'Deleted!',
+                        'Your file has been deleted.',
+                        'success'
+                      )
+                    }
+                  })
+                  },
+                  openEditModal: function() {
+                    Swal.fire({
+                    title: 'Want to Edit?',
+                    icon: 'warning',
+                    input:'text',
+                    inputPlaceholder: 'Employees Name',
+                    showCancelButton: true,
+                    confirmButtonColor: '#3085d6',
+                    cancelButtonColor: '#d33',
+                    confirmButtonText: 'Yes, Edit it!',
+                  
+                  }).then((result) => {
+                    console.log(result)
+                    if (result.isConfirmed) {
+                      Swal.fire(
+                        
+                        'Edited!',
+                        'Your file has been updated.',
+                        'success'
+                      )
+                    }
+                  })
+
+               
                     
                 }
+              }
             })
 
             const practiceMembers = [
@@ -107,6 +188,41 @@
                     editUrl: '#'
                 },
             ]
+
+            app.component('name-position', {
+              props:['name', 'position'],
+              template: `
+                    <p class="ml-4 inline-block align-middle text-sm md:text-base"><span class="font-medium">{{name}}</span><br><span class="font-light">{{position}}</span></p>
+                `
+
+            })
+
+            app.component('profile-image', {
+              props: ['image', 'name'],
+              template: `
+                    <img class="max-w-[60px] sm:max-w-[80px] rounded-full" :src="image" alt="name"/>
+                `
+            })
+
+            app.component('edit-btn', {
+             
+              template: `
+                    <a href="#" class="text-blue-500 mr-7 text-sm md:text-base font-medium hover:bg-blue-50 rounded-lg p-1">Edit</a>
+                `
+            })
+
+            app.component('delete-btn', {
+             
+              template: `
+                    <a href="#" class="text-red-500 text-sm md:text-base hover:bg-red-50 px-2 py-1 rounded-lg font-medium">Remove</a>
+                `
+            })
+
+
+
+
+
+     
 
             // Footer Link
             app.component('footer-link', {
